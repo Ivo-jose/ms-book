@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.ivogoncalves.ms_book.response.CurrencyExchange; 
 
-@FeignClient(name = "ms-currency-exchange", url = "${ms-currency-exchange.url}")
+@FeignClient(name = "ms-currency-exchange", path = "/api/currency-exchange")
 public interface CurrencyExchangeProxy {
 
-	@GetMapping(value = "/api/currency-exchange/{amount}/{from}/{to}")
+	@GetMapping("/{amount}/{from}/{to}")
 	public CurrencyExchange getCurrencyExchange(@PathVariable BigDecimal amount,
 													@PathVariable String from, @PathVariable String to); 
 }
