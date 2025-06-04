@@ -31,3 +31,19 @@ eureka:
       defaultZone: http://${EUREKA_USER:adminEureka}:${EUREKA_PASSWORD:12345}@${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+resilience4j:
+  bulkhead:
+    instances:
+      default:
+        max-concurrent-calls: 10
+  ratelimiter:
+    instances:
+      default:
+        limit-for-period: 2
+        limit-refresh-period: 10s  
+  retry:
+    instances:
+      foo-bar:
+        max-attempts: 5
+        wait-duration: 1s
+        enable-exponential-backoff: true

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BookService {
 
-	private final String template = "PORT: { %s } - FEIGN";
+	private final String template = "Book PORT: { %s } - Currency Exchange PORT: { %s }";
 	@Autowired
 	private Environment environment;
 	@Autowired
@@ -27,12 +27,11 @@ public class BookService {
 	
 	public BookDTO findBook(long id, String currency) {
 		log.info("Find Book by id: {} and currency: {}", id, currency);
-		var entity = repository.findById(id).orElseThrow(() -> 
-											new RuntimeException("Book not found! ID: " + id));
+		var entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Book not found! ID: " + id));
 		var currencyExchange = proxy.getCurrencyExchange(entity.getPrice(),	"USD", currency);
 		entity.setPrice(currencyExchange.getConvertedValue());
 		entity.setCurrency(currency);
-		entity.setEnvironment(String.format(template, environment.getProperty("local.server.port")));
+		entity.setEnvironment(String.format(template, environment.getProperty("local.server.port"), currencyExchange.getEnvironment()));
 		return mapper.map(entity, BookDTO.class);
 	}
 }
